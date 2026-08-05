@@ -5,11 +5,11 @@ import re
 import time
 import statistics
 from dataclasses import dataclass
+import glob
 
 from rake_nltk import Rake
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 
-DATASET_PATH = "output-2.json"
 VOCAB_PATH = "vocab.json"
 FILLER_VOCAB = ["um", "uh", "eh"]
 GENERIC_STOPWORDS = ["please", "can", "you", "okay", "now", "just"]
@@ -17,7 +17,9 @@ GENERIC_STOPWORDS = ["please", "can", "you", "okay", "now", "just"]
 CUSTOM_STOPWORDS = FILLER_VOCAB + GENERIC_STOPWORDS
 
 ENTITY_CLASSES = ["action", "target", "correction_connector"]
-NEGATION_MARKERS = {"no", "wait", "don't", "dont", "actually", "instead"}
+
+DATASET_PATH_SIMPLE = "chatette/complex/*.json"
+DATASET_PATH_COMPLEX = "chatette/simple/*.json"
 
 
 # method to load vocab exported from ExportVocab.py
@@ -50,11 +52,11 @@ def _load_vocab(path: str) -> dict:
 
 VOCAB = _load_vocab(VOCAB_PATH)
 _VOCAB_COMPILED = {
-    cls: [
+    class_name: [
         (entry, re.compile(r"(?<!\w)" + re.escape(entry.lower()) + r"(?!\w)"))
         for entry in sorted(entries, key=len, reverse=True)
     ]
-    for cls, entries in VOCAB.items()
+    for class_name, entries in VOCAB.items()
 }
 
 
@@ -67,20 +69,6 @@ class Example:
     complexity: str = "simple"  # "simple" or "complex" - if correction or negation
 
     has_filler: bool = False
-
-
-# method to derive complexity from test sentences
-def _infer_complexity(entities: list, text: str) -> str:
-    entity_types = {e["entity"] for e in entities}
-    lowered = text.lower()
-
-    if "correction_connector" in entity_types:
-        return "complex"
-
-    if any(marker in lowered.split() for marker in NEGATION_MARKERS):
-        return "complex"
-
-    return "simple"
 
 
 # converting chatette dataset's entity list into only one value per class
@@ -100,24 +88,33 @@ def _entities_to_actual_labels(entities: list) -> dict:
     return labels
 
 
-# method to load chatette's generated rasa nlu json output directly
-def load_dataset(path: str) -> list[Example]:
-    with open(path, "r") as f:
-        raw = json.load(f)
+# method to load chatette's generated rasa nlu json output directly for each complexity type separately - enlisted the help of Gemini
+def load_dataset(paths, complexity_label: str) -> list[Example]:
+    if isinstance(paths, str):
+        file_list = sorted(glob.glob(paths))
+    else:
+        file_list = paths
 
-    common_examples = raw["rasa_nlu_data"]["common_examples"]
+    if not file_list:
+        raise FileNotFoundError(f"No files found matching {paths}")
+
+    common_examples = []
+
+    for path in file_list:
+        with open(path, "r") as f:
+            raw = json.load(f)
+        common_examples.extend(raw["rasa_nlu_data"]["common_examples"])
 
     examples = []
 
     for example in common_examples:
-        text = example["text"]  # getting actual text value
-        entities = example.get("entities", [])  # getting tagged entities
-
+        text = example["text"]
+        entities = example.get("entities", [])
         examples.append(
             Example(
                 sentence=text,
                 actual_labels=_entities_to_actual_labels(entities),
-                complexity=_infer_complexity(entities, text),
+                complexity=complexity_label,
                 has_filler=any(w in text.lower().split() for w in FILLER_VOCAB),
             )
         )
@@ -132,7 +129,7 @@ def build_rake() -> Rake:
 
 # method to make RAKE's ranked phrases to action/target/correction labels using slots in chatette vocab, checking each phrase for a known vocab entry with the set being closed and avoiding the risk of adding semantic understanding RAKE's architecture doesn't actually allow
 def map_phrases_to_entities(ranked_phrases: list[str]) -> dict:
-    predicted = {cls: None for cls in ENTITY_CLASSES}
+    predicted = {class_name: None for class_name in ENTITY_CLASSES}
 
     for phrase in ranked_phrases:
         phrase_l = phrase.lower()
@@ -238,11 +235,16 @@ def benchmark_latency(examples: list[Example], rake: Rake, n_passes: int = 5) ->
 
 # main to run everything together
 def main():
-    print("Loading dataset...")
-    examples = load_dataset(DATASET_PATH)
+    print("Loading datasets...")
+    
+    simple_examples = load_dataset(DATASET_PATH_SIMPLE, "simple")
+    complex_examples = load_dataset(DATASET_PATH_COMPLEX, "complex")
+    examples = simple_examples + complex_examples
 
-    print(f"Loaded {len(examples)} test examples.")
-
+    print(
+        f"Loaded {len(simple_examples)} simple / {len(complex_examples)} complex "
+        f"({len(examples)} total)"
+    )
     rake = build_rake()
 
     print("Running RAKE extraction + entity mapping...")
