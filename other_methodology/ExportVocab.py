@@ -3,10 +3,7 @@
 import json
 import glob
 
-CHATETTE_PATH = [
-    "chatette/simple/*.json",
-    "chatette/complex/*.json",
-]
+CHATETTE_PATH = ["chatette/vocab_train/complex/test/*.json"]
 
 ENTITY_CLASSES = ["action", "target", "correction_connector"]
 
@@ -29,8 +26,10 @@ def load_common_examples(chatette_files: list[str]) -> list[dict]:
         # only adding to examples list only the actual examples, not the set up parts of the json
         examples.extend(raw["rasa_nlu_data"]["common_examples"])
 
-    print(f"Loaded {len(examples)} examples from {len(files_found)} file(s): "
-          f"{files_found}")
+    print(
+        f"Loaded {len(examples)} examples from {len(files_found)} file(s): "
+        f"{files_found}"
+    )
 
     # returning all examples
     return examples

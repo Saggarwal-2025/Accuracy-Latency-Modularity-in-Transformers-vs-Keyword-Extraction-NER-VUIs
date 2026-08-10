@@ -1,0 +1,477 @@
+%[action_intent]('training':1000, 'testing':22000)
+    [~[character?] ~[player?] | ~[player?] ~[character?]] ~[filler?] ~[can you] @[action] ~[preposition?] @[target]
+
+
+~[player]
+    yo
+    hey
+    hi
+    hello
+    sup
+    what's up
+    ay
+    oi
+    yo yo
+    hiya
+    howdy
+    yo bro
+    hey man
+    listen
+    look
+    so
+    alright
+    ok so
+    anyway
+    psst
+    ahem
+    excuse me
+    ready
+    here we go
+    okay
+
+~[filler]
+    uh
+    um
+    eh
+
+~[character]
+    Zelda
+    Kratos
+    Link
+    Mario
+    Luigi
+    Peach
+    Bowser
+    Sonic
+    Ada
+
+~[can you]
+    can you ~[filler?]
+    could you ~[filler?]
+    would you ~[filler?]
+    will you ~[filler?]
+    can u ~[filler?]
+    could u ~[filler?]
+    would u ~[filler?]
+    will u ~[filler?]
+    please ~[filler?]
+    pls ~[filler?]
+    plz ~[filler?]
+    do you mind ~[filler?]
+    would you mind ~[filler?]
+    mind if you ~[filler?]
+    can you please ~[filler?]
+    could you please ~[filler?]
+    would you please ~[filler?]
+    can you go ahead and ~[filler?]
+    go ahead and ~[filler?]
+    try to ~[filler?]
+    make sure to ~[filler?]
+    i need you to ~[filler?]
+    i'd like you to ~[filler?]
+    you should ~[filler?]
+    you gotta ~[filler?]
+    you need to ~[filler?]
+    could you just ~[filler?]
+    just ~[filler?]
+    help me ~[filler?]
+    do me a favor and ~[filler?]
+
+~[preposition]
+    at
+    on
+    to
+    toward
+    from
+    by
+    over
+    over the
+    that
+    this
+
+~[direction]
+    left
+    right
+    up
+    down
+    forward
+    back
+
+@[action]
+    ability two
+    absorb
+    advance
+    aim
+    ambush
+    ascend
+    attack
+    back out
+    backflip
+    backstab
+    balance
+    blink
+    blink strike
+    bounce
+    buff
+    burst fire
+    call out
+    cast
+    chain attack
+    charge
+    charge in
+    check
+    close door
+    combo
+    confirm
+    conjure
+    consume
+    cover fire
+    crawl
+    crawl through
+    critical hit
+    cross bridge
+    dash ~[direction]
+    debuff
+    decloak
+    deflect
+    defuse bomb
+    demolish
+    descend
+    detonate
+    disable
+    disarm
+    disguise
+    dismount
+    double jump
+    drain
+    drift
+    duck under
+    eat
+    electrocute
+    examine
+    execute
+    fast travel
+    feed
+    feint
+    forge
+    freeze
+    freeze enemy
+    grapple
+    grapple hook
+    hang
+    headbutt
+    headshot
+    heal
+    hide
+    hover
+    jump
+    kick
+    launch
+    ledge grab
+    leech
+    listen
+    load game
+    lock door
+    loot
+    mantle
+    mark target
+    melee
+    morph
+    mute
+    navigate menu
+    open chest
+    open door
+    open map
+    passive ability
+    peek
+    pet
+    phase
+    pick lock
+    plant bomb
+    poison
+    pop ultimate
+    power up
+    press
+    pull
+    pull lever
+    push
+    push button
+    quick load
+    quickscope
+    quit
+    rappel
+    ready up
+    reload
+    request backup
+    resume
+    retrieve
+    ride
+    riposte
+    run ~[direction]
+    rush
+    salute
+    salvage
+    save game
+    search
+    shapeshift
+    sheathe weapon
+    shock
+    shoot
+    shove
+    silent takedown
+    single fire
+    skip cutscene
+    slash
+    slide
+    slide under
+    smash
+    sneak attack
+    snipe from range
+    somersault
+    spectate
+    sprint
+    squeeze through
+    stab
+    step ~[direction]
+    stop
+    strafe
+    strike
+    suppress
+    swap weapon
+    swim
+    swing
+    swing across
+    switch weapon
+    tackle
+    take
+    taunt
+    throw item
+    throw rock
+    tiptoe
+    trade
+    trigger trap
+    tumble
+    turn
+    turn on
+    ultimate ability
+    unholster
+    unlock
+    unlock door
+    walk
+    walk ~[direction]
+    wall run
+    wave
+
+@[target]
+    alligator
+    altar
+    ammo
+    android
+    archer
+    axe
+    banner
+    beam
+    bear
+    beast
+    bike
+    blast
+    blob
+    boar
+    boat
+    bomb
+    boots
+    boss monster
+    bow
+    brute
+    bullet
+    butterfly
+    cabinet
+    camel
+    cape
+    cassette
+    castle
+    cave
+    cavern
+    ceiling
+    chain
+    chest
+    chicken
+    chief
+    cloak
+    clone
+    cloud
+    cobra
+    coin
+    column
+    commander
+    companion
+    container
+    conveyor belt
+    core
+    cow
+    crab
+    crow
+    crystal
+    cyborg
+    devil
+    dial
+    diamond
+    dolphin
+    drawer
+    dungeon
+    elder
+    elf
+    elk
+    emerald
+    energy cell
+    engineer
+    exosuit
+    explosion
+    explosive
+    fairy
+    fire
+    fireball
+    fish
+    fisherman
+    fly
+    forcefield
+    frog
+    fuel
+    gecko
+    general
+    ghost
+    ghoul
+    goblin
+    gorilla
+    griffin
+    grunt
+    gunner
+    hammer
+    hazard
+    health pack
+    helicopter
+    helmet
+    hippo
+    hole
+    hornet
+    hostage
+    house
+    hut
+    jeep
+    jewel
+    journal
+    key
+    keycard
+    ladder
+    lake
+    lava
+    ledge
+    letter
+    lever
+    lightning bolt
+    lion
+    lizard
+    mage
+    mechanic
+    medallion
+    medic
+    mine
+    mine shaft
+    monkey
+    monster
+    monument
+    moose
+    mosquito
+    mummy
+    nightmare
+    note
+    octopus
+    ogre
+    panther
+    penguin
+    phantom
+    phoenix
+    pig
+    pillar
+    pilot
+    pipe
+    pit
+    plane
+    plant
+    poison cloud
+    pond
+    portal
+    power up
+    power-up
+    powerup
+    priest
+    prince
+    princess
+    queen
+    rabbit
+    ramp
+    raven
+    rhino
+    river
+    robot
+    rope
+    ruby
+    ruins
+    safe
+    samurai
+    sand
+    sapphire
+    seal
+    sentry
+    serpent
+    shadow
+    shark
+    shell
+    shockwave
+    shuriken
+    skeleton
+    slime
+    slope
+    slug
+    smoke
+    snow
+    soldier
+    sorcerer
+    spawn point
+    spear
+    spikes
+    staircase
+    statue
+    submarine
+    switch
+    sword
+    table
+    tank
+    tarantula
+    teleporter
+    thief
+    tiger
+    toad
+    tome
+    torch
+    town
+    townsperson
+    trap
+    treasure
+    troll
+    truck
+    tunnel
+    turret
+    vampire
+    vendor
+    village
+    villager
+    viper
+    water
+    waterfall
+    werewolf
+    whale
+    witch
+    wizard
+    worm
+    wraith

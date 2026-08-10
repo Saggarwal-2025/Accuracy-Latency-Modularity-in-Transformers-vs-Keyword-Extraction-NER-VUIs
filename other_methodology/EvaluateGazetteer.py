@@ -3,6 +3,7 @@ import re
 import time
 import statistics
 from dataclasses import dataclass
+import glob
 
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 
@@ -14,8 +15,8 @@ CUSTOM_STOPWORDS = FILLER_VOCAB + GENERIC_STOPWORDS
 
 ENTITY_CLASSES = ["action", "target", "correction_connector"]
 
-DATASET_PATH_SIMPLE = "chatette/complex/*.json"
-DATASET_PATH_COMPLEX = "chatette/simple/*.json"
+DATASET_PATH_SIMPLE = ["chatette/vocab_test/simple/test/*.json"]
+DATASET_PATH_COMPLEX = ["chatette/vocab_test/complex/test/*.json"]
 
 
 # method to load vocab exported from ExportVocab.py
@@ -61,28 +62,45 @@ def _entities_to_actual_labels(entities: list) -> dict:
     return labels
 
 
-def load_dataset(path_pattern: str, complexity_label: str) -> list[Example]:
-    import glob
+# method to load each of chatette's generated rasa nlu json output directly for each complexity type separately - enlisted the help of Gemini
+def load_dataset(paths, complexity_label: str) -> list[Example]:
+    if isinstance(paths, str):
+        file_list = sorted(glob.glob(paths))
+    elif isinstance(paths, (list, tuple)):
+        file_list = []
+        for path_or_pattern in paths:
+            if isinstance(path_or_pattern, str) and glob.has_magic(path_or_pattern):
+                file_list.extend(sorted(glob.glob(path_or_pattern)))
+            else:
+                file_list.append(path_or_pattern)
+        file_list = sorted(file_list)
+    else:
+        file_list = sorted(paths)
 
-    files_found = sorted(glob.glob(path_pattern))
-    if not files_found:
-        raise FileNotFoundError(f"No files matched {path_pattern}")
+    if not file_list:
+        raise FileNotFoundError(f"No files found matching {paths}")
 
-    examples = []
-    for path in files_found:
+    common_examples = []
+
+    for path in file_list:
         with open(path, "r") as f:
             raw = json.load(f)
-        for example in raw["rasa_nlu_data"]["common_examples"]:
-            text = example["text"]
-            entities = example.get("entities", [])
-            examples.append(
-                Example(
-                    sentence=text,
-                    actual_labels=_entities_to_actual_labels(entities),
-                    complexity=complexity_label,
-                    has_filler=any(w in text.lower().split() for w in FILLER_VOCAB),
-                )
+        common_examples.extend(raw["rasa_nlu_data"]["common_examples"])
+
+    examples = []
+
+    for example in common_examples:
+        text = example["text"]
+        entities = example.get("entities", [])
+        examples.append(
+            Example(
+                sentence=text,
+                actual_labels=_entities_to_actual_labels(entities),
+                complexity=complexity_label,
+                has_filler=any(w in text.lower().split() for w in FILLER_VOCAB),
             )
+        )
+
     return examples
 
 

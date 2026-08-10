@@ -2,36 +2,36 @@
   "metrics": {
     "overall": {
       "action": {
-        "accuracy": 0.7007555555555556,
-        "precision": 0.6730534941103812,
-        "recall": 0.7007555555555556,
-        "f1": 0.6792322592508502
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "target": {
-        "accuracy": 0.7059555555555556,
-        "precision": 0.8316150178089512,
-        "recall": 0.7059555555555556,
-        "f1": 0.754843561374917
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "correction_connector": {
-        "accuracy": 0.6578222222222222,
-        "precision": 0.44468429477199656,
-        "recall": 0.6578222222222222,
-        "f1": 0.5273101268054726
+        "accuracy": 0.5,
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.3333333333333333
       }
     },
     "simple": {
       "action": {
-        "accuracy": 0.898695652173913,
-        "precision": 0.8706181158301145,
-        "recall": 0.898695652173913,
-        "f1": 0.8779360183492124
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "target": {
-        "accuracy": 0.8747391304347826,
-        "precision": 0.9711114364731336,
-        "recall": 0.8747391304347826,
-        "f1": 0.9118100945880624
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "correction_connector": {
         "accuracy": 1.0,
@@ -42,69 +42,69 @@
     },
     "complex": {
       "action": {
-        "accuracy": 0.4938181818181818,
-        "precision": 0.47632204592196126,
-        "recall": 0.4938181818181818,
-        "f1": 0.47515726802672065
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "target": {
-        "accuracy": 0.5295,
-        "precision": 0.6801315551728264,
-        "recall": 0.5295,
-        "f1": 0.5859156388503572
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "correction_connector": {
-        "accuracy": 0.3000909090909091,
-        "precision": 0.2665001677140189,
-        "recall": 0.3000909090909091,
-        "f1": 0.28226313377212936
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       }
     },
     "filler_present": {
       "action": {
-        "accuracy": 0.681404180431628,
-        "precision": 0.6592212182149805,
-        "recall": 0.681404180431628,
-        "f1": 0.662313693225367
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "target": {
-        "accuracy": 0.6710920374201118,
-        "precision": 0.7957487679198371,
-        "recall": 0.6710920374201118,
-        "f1": 0.7182949187749785
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "correction_connector": {
-        "accuracy": 0.6086943097965358,
-        "precision": 0.38865229632896386,
-        "recall": 0.6086943097965358,
-        "f1": 0.4689448431278336
+        "accuracy": 0.4597868760515984,
+        "precision": 0.2114039713892879,
+        "recall": 0.4597868760515984,
+        "f1": 0.28963676117035525
       }
     },
     "filler_absent": {
       "action": {
-        "accuracy": 0.7504559511537546,
-        "precision": 0.7223265316942731,
-        "recall": 0.7504559511537546,
-        "f1": 0.7282328628982847
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "target": {
-        "accuracy": 0.7954959955594323,
-        "precision": 0.9298285166815283,
-        "recall": 0.7954959955594323,
-        "f1": 0.848205168173574
+        "accuracy": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "correction_connector": {
-        "accuracy": 0.7839980968995321,
-        "precision": 0.6184283097907237,
-        "recall": 0.7839980968995321,
-        "f1": 0.6906523930218199
+        "accuracy": 0.6719424460431654,
+        "precision": 0.45150665079447233,
+        "recall": 0.6719424460431654,
+        "f1": 0.5400983172154188
       }
     }
   },
   "latency": {
-    "mean_ms": 0.20336686050001945,
-    "median_ms": 0.18924986943602562,
-    "stdev_ms": 0.0993295859053331,
-    "n_samples": 225000
+    "mean_ms": 0.21428908565695481,
+    "median_ms": 0.20920787937939167,
+    "stdev_ms": 0.06861260656191828,
+    "n_samples": 220000
   }
 }

@@ -1,0 +1,491 @@
+%[action_intent]('training':1000, 'testing':22000)
+    [~[character?] ~[player?] | ~[player?] ~[character?]] ~[filler?] ~[can you] @[action] @[correction_connector] ~[filler?] @[action] ~[preposition?] @[target]
+
+~[player]
+    yo
+    hey
+    hi
+    hello
+    sup
+    what's up
+    ay
+    oi
+    yo yo
+    hiya
+    howdy
+    yo bro
+    hey man
+    listen
+    look
+    so
+    alright
+    ok so
+    anyway
+    psst
+    ahem
+    excuse me
+    ready
+    here we go
+    okay
+
+~[filler]
+    uh
+    um
+    eh
+
+~[character]
+    Zelda
+    Kratos
+    Link
+    Mario
+    Luigi
+    Peach
+    Bowser
+    Sonic
+    Ada
+
+~[can you]
+    can you ~[filler?]
+    could you ~[filler?]
+    would you ~[filler?]
+    will you ~[filler?]
+    can u ~[filler?]
+    could u ~[filler?]
+    would u ~[filler?]
+    will u ~[filler?]
+    please ~[filler?]
+    pls ~[filler?]
+    plz ~[filler?]
+    do you mind ~[filler?]
+    would you mind ~[filler?]
+    mind if you ~[filler?]
+    can you please ~[filler?]
+    could you please ~[filler?]
+    would you please ~[filler?]
+    can you go ahead and ~[filler?]
+    go ahead and ~[filler?]
+    try to ~[filler?]
+    make sure to ~[filler?]
+    i need you to ~[filler?]
+    i'd like you to ~[filler?]
+    you should ~[filler?]
+    you gotta ~[filler?]
+    you need to ~[filler?]
+    could you just ~[filler?]
+    just ~[filler?]
+    help me ~[filler?]
+    do me a favor and ~[filler?]
+
+~[preposition]
+    at
+    on
+    to
+    toward
+    from
+    by
+    over
+    over the
+    that
+    this
+
+~[direction]
+    left
+    right
+    up
+    down
+    forward
+    back
+
+@[action]
+    ability one
+    activate
+    activate ability
+    air dash
+    apply
+    backpedal
+    barrier
+    blend in
+    block
+    boost
+    brake
+    break
+    build
+    camp
+    cancel
+    cast spell
+    channel
+    charge attack
+    choke out
+    climb
+    climb ~[direction]
+    cloak
+    close map
+    collect
+    construct
+    continue
+    counter
+    craft
+    cross
+    crouch
+    crouch walk
+    curse
+    dance
+    dash
+    deactivate
+    defend
+    destroy
+    dig
+    disarm trap
+    distract
+    dive
+    dodge
+    draw weapon
+    drink
+    drop
+    drop down
+    duck
+    eavesdrop
+    emote
+    enable
+    enchant
+    equip
+    exit
+    fall back
+    finishing move
+    fire
+    flank
+    flip switch
+    fly
+    forfeit
+    front flip
+    gift
+    glide
+    grab
+    guard
+    hack
+    heavy attack
+    hex
+    hide body
+    hit
+    hold position
+    holster
+    hook
+    hop
+    hotwire
+    ignite
+    inspect
+    interact
+    inventory
+    invisibility
+    jab
+    juggle
+    jump gap
+    jump ~[direction]
+    knock back
+    knock down
+    knockout
+    leap
+    level up
+    light attack
+    lunge
+    lure
+    mash
+    mount
+    move ~[direction]
+    no-scope
+    open
+    open inventory
+    parry
+    pause
+    pick up
+    ping
+    place
+    plant
+    power off
+    power on
+    punch
+    quick save
+    read
+    reflect
+    repair
+    report
+    respawn
+    restart
+    resurrect
+    retreat
+    retry
+    reverse
+    revive
+    roll
+    roll ~[direction]
+    select
+    select option
+    set trap
+    shield
+    sidestep
+    slow down
+    sneak
+    snipe
+    spam
+    special attack
+    speed up
+    spin
+    spray
+    sprint ~[direction]
+    stealth
+    stun
+    summon
+    surface
+    surrender
+    swap
+    tame
+    teleport
+    throw
+    thrust
+    toggle map
+    transform
+    tread water
+    turn off
+    u-turn
+    unequip
+    upgrade
+    uppercut
+    use
+    use item
+    use skill
+    use ultimate
+    vault
+    vote kick
+    wall climb
+    whistle
+    zipline
+
+@[target]
+    AI
+    UFO
+    alien
+    ally
+    ammo box
+    amulet
+    angel
+    ant
+    ape
+    armor
+    arrow
+    artifact
+    bad guy
+    bag
+    ball
+    bandit
+    barrel
+    barrier
+    bat
+    battery
+    bed
+    bee
+    beetle
+    bird
+    blacksmith
+    block
+    book
+    boomerang
+    boss
+    boulder
+    box
+    bridge
+    bush
+    button
+    cabin
+    campfire
+    candle
+    captive
+    car
+    cart
+    cat
+    chair
+    chameleon
+    chasm
+    checkpoint
+    chimera
+    chip
+    city
+    civilian
+    cliff
+    coin pouch
+    compass
+    crate
+    creature
+    criminal
+    crocodile
+    crown
+    cultist
+    dagger
+    dart
+    deer
+    demon
+    dinosaur
+    disk
+    dog
+    door
+    doppelganger
+    dragon
+    dragonling
+    driver
+    drone
+    dwarf
+    eagle
+    elemental
+    elephant
+    elevator
+    elixir
+    enemy
+    fan
+    farmer
+    final boss
+    first guy
+    flag
+    floor
+    flower
+    fortress
+    fox
+    gangster
+    gap
+    gas
+    gate
+    gauntlet
+    gear
+    gem
+    giant
+    gnome
+    gold
+    golem
+    gremlin
+    grenade
+    guard
+    guide
+    guy on the left
+    hawk
+    healer
+    heart
+    hero
+    horse
+    hoverboard
+    hydra
+    ice
+    iceball
+    imp
+    item
+    jelly
+    jellyfish
+    jet
+    king
+    knight
+    kobold
+    kraken
+    lantern
+    laser
+    leader
+    lobster
+    locker
+    loot
+    lycan
+    map
+    mech
+    mech suit
+    merchant
+    mine field
+    mini-boss
+    minion
+    missile
+    mob
+    motorcycle
+    mouse
+    mud
+    mutant
+    ninja
+    obstacle
+    ocean
+    ooze
+    orb
+    orc
+    owl
+    pirate
+    pixie
+    platform
+    potion
+    prisoner
+    raccoon
+    raptor
+    rat
+    relic
+    ring
+    rock
+    rocket
+    rogue
+    roof
+    rune
+    sack
+    save point
+    scientist
+    scorpion
+    scroll
+    sea
+    shaft
+    shaman
+    shard
+    shelf
+    shield
+    ship
+    shopkeeper
+    shrine
+    sled
+    snail
+    snake
+    sniper
+    spaceship
+    specter
+    spider
+    squid
+    squirrel
+    staff
+    stairs
+    star
+    stone
+    teammate
+    temple
+    tent
+    thug
+    ticket
+    tower
+    tree
+    trophy
+    turtle
+    valve
+    vault
+    villain
+    vine
+    wagon
+    wall
+    walrus
+    wand
+    wasp
+    window
+    wolf
+    wraithlord
+    zombie
+
+@[correction_connector]
+    never mind
+    nevermind
+    ignore that
+    one sec
+    hold on
+    uh no
+    er no
+    hang on
+    that's wrong
+    wrong one
+    not that one
+    switch that
+    fix that
+    instead

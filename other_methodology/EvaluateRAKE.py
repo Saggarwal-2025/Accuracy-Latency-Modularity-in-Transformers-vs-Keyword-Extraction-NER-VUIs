@@ -18,8 +18,8 @@ CUSTOM_STOPWORDS = FILLER_VOCAB + GENERIC_STOPWORDS
 
 ENTITY_CLASSES = ["action", "target", "correction_connector"]
 
-DATASET_PATH_SIMPLE = "chatette/complex/*.json"
-DATASET_PATH_COMPLEX = "chatette/simple/*.json"
+DATASET_PATH_SIMPLE = ["chatette/vocab_test/simple/test/*.json"]
+DATASET_PATH_COMPLEX = ["chatette/vocab_test/complex/test/*.json"]
 
 
 # method to load vocab exported from ExportVocab.py
@@ -88,12 +88,20 @@ def _entities_to_actual_labels(entities: list) -> dict:
     return labels
 
 
-# method to load chatette's generated rasa nlu json output directly for each complexity type separately - enlisted the help of Gemini
+# method to load each of chatette's generated rasa nlu json output directly for each complexity type separately - enlisted the help of Gemini
 def load_dataset(paths, complexity_label: str) -> list[Example]:
     if isinstance(paths, str):
         file_list = sorted(glob.glob(paths))
+    elif isinstance(paths, (list, tuple)):
+        file_list = []
+        for path_or_pattern in paths:
+            if isinstance(path_or_pattern, str) and glob.has_magic(path_or_pattern):
+                file_list.extend(sorted(glob.glob(path_or_pattern)))
+            else:
+                file_list.append(path_or_pattern)
+        file_list = sorted(file_list)
     else:
-        file_list = paths
+        file_list = sorted(paths)
 
     if not file_list:
         raise FileNotFoundError(f"No files found matching {paths}")
@@ -236,7 +244,7 @@ def benchmark_latency(examples: list[Example], rake: Rake, n_passes: int = 5) ->
 # main to run everything together
 def main():
     print("Loading datasets...")
-    
+
     simple_examples = load_dataset(DATASET_PATH_SIMPLE, "simple")
     complex_examples = load_dataset(DATASET_PATH_COMPLEX, "complex")
     examples = simple_examples + complex_examples
