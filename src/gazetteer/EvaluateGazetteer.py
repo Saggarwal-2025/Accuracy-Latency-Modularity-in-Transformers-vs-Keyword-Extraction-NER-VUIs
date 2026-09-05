@@ -2,21 +2,21 @@ import json
 import re
 import time
 import statistics
+import argparse
 from dataclasses import dataclass
 import glob
+from pathlib import Path
 
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 
-VOCAB_PATH = "vocab.json"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DATA_ROOT = REPO_ROOT / "data" / "splits"
 FILLER_VOCAB = ["um", "uh", "eh"]
 GENERIC_STOPWORDS = ["please", "can", "you", "okay", "now", "just"]
 
 CUSTOM_STOPWORDS = FILLER_VOCAB + GENERIC_STOPWORDS
 
 ENTITY_CLASSES = ["action", "target", "correction_connector"]
-
-DATASET_PATH_SIMPLE = ["chatette/vocab_test/simple/test/*.json"]
-DATASET_PATH_COMPLEX = ["chatette/vocab_test/complex/test/*.json"]
 
 
 # method to load vocab exported from ExportVocab.py
@@ -31,15 +31,51 @@ def _load_vocab(path: str) -> dict:
     return vocab
 
 
-VOCAB = _load_vocab(VOCAB_PATH)
+def _dataset_config(dataset: str) -> tuple[list[str], list[str], list[str]]:
+    if dataset == "closed":
+        root = DATA_ROOT / "closed"
+        data_paths = [str(root / "simple" / "*.json"), str(root / "complex" / "*.json")]
+        vocab_paths = data_paths
+    else:
+        root = DATA_ROOT / "open"
+        data_paths = [
+            str(root / "vocab_test" / "simple" / "test" / "*.json"),
+            str(root / "vocab_test" / "complex" / "test" / "*.json"),
+        ]
+        vocab_paths = [
+            str(root / "vocab_train" / "simple" / "train" / "*.json"),
+            str(root / "vocab_train" / "complex" / "train" / "*.json"),
+        ]
+    return data_paths[:1], data_paths[1:], vocab_paths
 
-_VOCAB_COMPILED = {
-    class_name: [
-        (entry, re.compile(r"(?<!\w)" + re.escape(entry.lower()) + r"(?!\w)"))
-        for entry in sorted(entries, key=len, reverse=True)
-    ]
-    for class_name, entries in VOCAB.items()
-}
+
+def _load_vocab_from_dataset(paths: list[str]) -> dict:
+    examples = []
+    for path in paths:
+        for file_path in sorted(glob.glob(path)):
+            with open(file_path, "r") as f:
+                examples.extend(json.load(f)["rasa_nlu_data"]["common_examples"])
+    return {
+        class_name: sorted(
+            {
+                entity["value"]
+                for example in examples
+                for entity in example.get("entities", [])
+                if entity.get("entity") == class_name
+            }
+        )
+        for class_name in ENTITY_CLASSES
+    }
+
+
+def _compile_vocab(vocab: dict) -> dict:
+    return {
+        class_name: [
+            (entry, re.compile(r"(?<!\w)" + re.escape(entry.lower()) + r"(?!\w)"))
+            for entry in sorted(entries, key=len, reverse=True)
+        ]
+        for class_name, entries in vocab.items()
+    }
 
 
 @dataclass
@@ -105,7 +141,7 @@ def load_dataset(paths, complexity_label: str) -> list[Example]:
 
 
 # method to run pure gazetteer on data without ranking step, based on method from EvaluateRAKE.py
-def run_gazetteer_on_example(sentence: str) -> tuple[dict, float]:
+def run_gazetteer_on_example(sentence: str, compiled_vocab: dict) -> tuple[dict, float]:
     start = time.perf_counter()
 
     sentence_l = sentence.lower()
@@ -113,7 +149,7 @@ def run_gazetteer_on_example(sentence: str) -> tuple[dict, float]:
     # tracking the start index of the current best (rightmost) match per class
     best_start = {class_name: -1 for class_name in ENTITY_CLASSES}
 
-    for class_name, compiled_entries in _VOCAB_COMPILED.items():
+    for class_name, compiled_entries in compiled_vocab.items():
         for entry, pattern in compiled_entries:
             for match in pattern.finditer(sentence_l):
                 if match.start() > best_start[class_name]:
@@ -168,9 +204,18 @@ def evaluate(examples: list[Example], predictions: list[dict]) -> dict:
 
 # main to run everything together, taken from EvaluateRAKE and changed words within print statements
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", choices=("closed", "open"), default="closed")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+
+    simple_paths, complex_paths, vocab_paths = _dataset_config(args.dataset)
+    vocab = _load_vocab_from_dataset(vocab_paths)
+    compiled_vocab = _compile_vocab(vocab)
+
     print("Loading datasets...")
-    simple_examples = load_dataset(DATASET_PATH_SIMPLE, "simple")
-    complex_examples = load_dataset(DATASET_PATH_COMPLEX, "complex")
+    simple_examples = load_dataset(simple_paths, "simple")
+    complex_examples = load_dataset(complex_paths, "complex")
     examples = simple_examples + complex_examples
     print(
         f"Loaded {len(simple_examples)} simple / {len(complex_examples)} complex "
@@ -180,7 +225,7 @@ def main():
     print("Running pure gazetteer matching...")
     predictions = []
     for ex in examples:
-        pred, _ = run_gazetteer_on_example(ex.sentence)
+        pred, _ = run_gazetteer_on_example(ex.sentence, compiled_vocab)
         predictions.append(pred)
 
     print("Computing metrics...")
@@ -190,7 +235,7 @@ def main():
     all_latencies = []
     for _ in range(5):
         for ex in examples:
-            _, ms = run_gazetteer_on_example(ex.sentence)
+            _, ms = run_gazetteer_on_example(ex.sentence, compiled_vocab)
             all_latencies.append(ms)
     latency = {
         "mean_ms": statistics.mean(all_latencies),
@@ -200,9 +245,10 @@ def main():
     }
 
     output = {"metrics": metrics, "latency": latency}
-    with open("gazetteer_results.json", "w") as f:
+    output_path = args.output or REPO_ROOT / f"gazetteer_{args.dataset}_results.json"
+    with open(output_path, "w") as f:
         json.dump(output, f, indent=2)
-    print("Saved full results to gazetteer_results.json")
+    print(f"Saved full results to {output_path}")
 
 
 if __name__ == "__main__":

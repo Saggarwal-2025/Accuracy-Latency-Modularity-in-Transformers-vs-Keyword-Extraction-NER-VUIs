@@ -211,12 +211,12 @@ metrics_box = draw_box(
 draw_arrow((5.2, 2.6), (5.2, 2.05))
 
 ax.set_title(
-    "Figure 3: GAMEBERT vs. RAKE vs. Gazetteer Evaluation Pipeline",
+    "Figure 2: GAMEBERT vs. RAKE vs. Gazetteer Evaluation Pipeline",
     fontsize=12,
     pad=20,
 )
 
 plt.tight_layout()
-plt.savefig("figure3_system_diagram.png", dpi=300, bbox_inches="tight")
+plt.savefig("2_system_diagram.png", dpi=300, bbox_inches="tight")
 plt.close()
 print("Saved figure3_system_diagram.png")

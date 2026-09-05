@@ -16,5 +16,7 @@ plt.figtext(
 )
 plt.ylim(0.9, 1)
 
-plt.savefig("metrics.png")
+plt.xlabel("Figure 1: GAMEBERT metrics after training")
+
+plt.savefig("1_metrics.png")
 plt.close()

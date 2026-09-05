@@ -2,8 +2,11 @@
 
 import json
 import glob
+import argparse
+from pathlib import Path
 
-CHATETTE_PATH = ["chatette/vocab_train/complex/test/*.json"]
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DATA_ROOT = REPO_ROOT / "data" / "splits"
 
 ENTITY_CLASSES = ["action", "target", "correction_connector"]
 
@@ -52,17 +55,35 @@ def build_vocab(examples: list[dict]) -> dict:
 
 # main method putting everything together
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", choices=("closed", "open"), default="closed")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
 
-    examples = load_common_examples(CHATETTE_PATH)
+    if args.dataset == "closed":
+        root = DATA_ROOT / "closed"
+        chatette_path = [
+            str(root / "simple" / "*.json"),
+            str(root / "complex" / "*.json"),
+        ]
+    else:
+        root = DATA_ROOT / "open" / "vocab_train"
+        chatette_path = [
+            str(root / "simple" / "train" / "*.json"),
+            str(root / "complex" / "train" / "*.json"),
+        ]
+
+    examples = load_common_examples(chatette_path)
     vocab = build_vocab(examples)
 
     for class_name, values in vocab.items():
         print(f"{class_name}: {len(values)} unique values")
 
-    with open("vocab.json", "w") as f:
+    output_path = args.output or REPO_ROOT / f"vocab_{args.dataset}.json"
+    with open(output_path, "w") as f:
         json.dump(vocab, f, indent=2)
 
-    print(f"Saved vocab to vocab.json")
+    print(f"Saved vocab to {output_path}")
 
 
 if __name__ == "__main__":
